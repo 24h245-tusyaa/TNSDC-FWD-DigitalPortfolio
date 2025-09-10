@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My portfolio</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Styles -->
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Share Tech Mono', monospace;
+      background: radial-gradient(circle at top, #0d0d0d 0%, #000 100%);
+      color: #e0e0e0;
+      line-height: 1.6;
+      scroll-behavior: smooth;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Cyberpunk grid */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: linear-gradient(rgba(255,0,255,0.08) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0,255,255,0.08) 1px, transparent 1px);
+      background-size: 40px 40px;
+      z-index: -1;
+    }
+
+    /* Neon glow */
+    .neon-text {
+      font-family: 'Orbitron', sans-serif;
+      color: #fff;
+      text-shadow: 0 0 5px #0ff, 0 0 10px #ff00ff, 0 0 20px #0ff;
+    }
+
+    /* Header */
+    header {
+      background: transparent;
+      color: #fff;
+      padding: 5rem 2rem;
+      text-align: center;
+    }
+    header h1 { font-size: 3rem; margin-bottom: 1rem; font-weight: 700; }
+    header p { font-size: 1.2rem; color: #f5f5f5; }
+
+    /* Navigation */
+    nav { background: rgba(0,0,0,0.85); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid #ff00ff; }
+    .nav-container { max-width: 1100px; margin: auto; display: flex; justify-content: space-between; align-items: center; padding: 1rem; }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a { color: #0ff; text-decoration: none; font-weight: 600; transition: all 0.3s; }
+    .nav-links a:hover { color: #ff00ff; text-shadow: 0 0 10px #ff00ff; }
+
+    /* Hamburger */
+    .hamburger { display: none; flex-direction: column; cursor: pointer; gap: 5px; }
+    .hamburger div { width: 25px; height: 3px; background: #fff; }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; flex-direction: column; background: #111; width: 100%; padding: 1rem; }
+      .nav-links.active { display: flex; }
+      .hamburger { display: flex; }
+    }
+
+    section {
+      max-width: 1100px;
+      margin: 4rem auto;
+      padding: 2rem;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s ease;
+      background: rgba(20,20,40,0.6);
+      border-radius: 12px;
+      box-shadow: 0 0 25px rgba(255,0,255,0.4);
+    }
+    section.visible { opacity: 1; transform: translateY(0); }
+    h2 { font-family: 'Orbitron', sans-serif; font-size: 2rem; margin-bottom: 2rem; color: #0ff; text-shadow: 0 0 10px #ff00ff; }
+
+    /* Profile */
+    .about { display: flex; flex-wrap: wrap; gap: 2rem; align-items: center; }
+    .about img { width: 250px; border-radius: 50%; box-shadow: 0 0 20px #ff00ff; }
+    .about p { flex: 1; font-size: 1.1rem; color: #ccc; }
+
+    /* Skills */
+    #skills ul {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      text-align: center;
+      padding: 0;
+    }
+    #skills li {
+      background: rgba(0,0,0,0.7);
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #0ff;
+      transition: 0.3s;
+    }
+    #skills li:hover { transform: translateY(-5px); box-shadow: 0 0 25px #ff00ff; }
+    #skills i { font-size: 2rem; margin-bottom: 0.5rem; }
+
+    /* Portfolio */
+    .portfolio { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+    .portfolio-item { background: rgba(0,0,0,0.7); border-radius: 12px; overflow: hidden; box-shadow: 0 0 20px #0ff; transition: transform 0.3s, box-shadow 0.3s; }
+    .portfolio-item h3 { padding: 1rem; font-size: 1.2rem; text-align: center; color: #fff; text-shadow: 0 0 8px #ff00ff; }
+    .portfolio-item:hover { transform: translateY(-8px); box-shadow: 0 0 30px #ff00ff; }
+
+    /* Contact */
+    .contact form { display: flex; flex-direction: column; gap: 1rem; background: rgba(0,0,0,0.8); padding: 2rem; border-radius: 12px; box-shadow: 0 0 20px #0ff; }
+    .contact input, .contact textarea { padding: 0.9rem; border: none; border-radius: 8px; font-size: 1rem; width: 100%; background: rgba(20,20,20,0.9); color: #0ff; }
+    .contact input::placeholder, .contact textarea::placeholder { color: #888; }
+    .contact button { padding: 1rem; border: none; background: linear-gradient(120deg, #ff00ff, #0ff); color: #fff; font-size: 1rem; font-weight: bold; border-radius: 8px; cursor: pointer; transition: all 0.3s; box-shadow: 0 0 15px #ff00ff; }
+    .contact button:hover { transform: scale(1.05); box-shadow: 0 0 25px #0ff; }
+    .contact-info { margin-top: 1.5rem; text-align: center; color: #ccc; font-size: 1rem; }
+
+    /* Scroll to top */
+    #toTop { position: fixed; bottom: 20px; right: 20px; background: #ff00ff; color: #fff; border: none; padding: 14px 18px; border-radius: 50%; font-size: 20px; cursor: pointer; display: none; box-shadow: 0 0 20px #ff00ff; transition: 0.3s; }
+    #toTop:hover { background: #0ff; box-shadow: 0 0 25px #0ff; }
+
+    /* Footer */
+    footer { background: #000; color: #888; text-align: center; padding: 2rem; margin-top: 3rem; font-size: 0.9rem; border-top: 1px solid #ff00ff; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <h1 class="neon-text">R.TUSYAA</h1>
+  </header>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-container">
+      <h2 style="color:#ff00ff;">Portfolio</h2>
+      <div class="hamburger" onclick="toggleMenu()">
+        <div></div><div></div><div></div>
+      </div>
+      <div class="nav-links" id="navLinks">
+        <a href="#about">Profile</a>
+        <a href="#skills">Skills</a>
+        <a href="#portfolio">My Works</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- About Section -->
+  <section id="about">
+    <h2>Profile</h2>
+    <div class="about">
+      <img src="https://www.dolby.com/siteassets/xf-site/content-detail-pages/cyberpunk-2077.jpg" alt="Profile Picture">
+      <p>
+        Hi, I’m <span class="neon-text">R.Tusyaa</span> — BCA student studys at am jain college a passionate tech enthusiast and developer with a futuristic vision. 
+        I love creating projects that combine functionality with style using <strong>C++, Python, JavaScript, PHP</strong>, and a strong foundation in <strong>Data Structures</strong>. 
+        I’m also fascinated by <strong>Artificial Intelligence</strong>, aiming to build innovative solutions that push boundaries.
+      </p>
+    </div>
+  </section>
+
+  <!-- Skills Section -->
+  <section id="skills">
+    <h2>Skills</h2>
+    <div class="skills">
+      <ul>
+        <li><i class="fa-brands fa-html5" style="color:#ff5733;"></i><p class="neon-text">HTML</p></li>
+        <li><i class="fa-brands fa-js" style="color:#f7df1e;"></i><p class="neon-text">JavaScript</p></li>
+        <li><i class="fa-solid fa-code" style="color:#00acee;"></i><p class="neon-text">C++</p></li>
+        <li><i class="fa-brands fa-python" style="color:#3776ab;"></i><p class="neon-text">Python</p></li>
+        <li><i class="fa-solid fa-database" style="color:#0ff;"></i><p class="neon-text">Data Structures</p></li>
+        <li><i class="fa-brands fa-php" style="color:#8892be;"></i><p class="neon-text">PHP</p></li>
+        <li><i class="fa-solid fa-robot" style="color:#ff00ff;"></i><p class="neon-text">AI</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Portfolio Section -->
+  <section id="portfolio">
+    <h2>My Works</h2>
+    <div class="portfolio">
+      <div class="portfolio-item"><h3>Resume Builder</h3></div>
+      <div class="portfolio-item"><h3>AI Chatbot</h3></div>
+      <div class="portfolio-item"><h3>Portfolio Website</h3></div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact">
+    <h2>Contact Me</h2>
+    <div class="contact">
+      <form>
+        <input type="text" placeholder="Your Name" required>
+        <input type="email" placeholder="Your Email" required>
+        <textarea rows="5" placeholder="Your Message" required></textarea>
+        <button type="submit">Send Message</button>
+      </form>
+      <div class="contact-info">
+        <p><i class="fa-solid fa-envelope"></i> Mail: <a href="mailto:tusyaatusyaawin@gmail.com" style="color:#0ff;">tusyaatusyaawin@gmail.com</a></p>
+        <p><i class="fa-solid fa-phone"></i> Phone: <a href="tel:+918056117611" style="color:#0ff;">+91 8056117611</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 R.Tusyaa | Contact: 24h245@amjaincollege.edu.in</p>
+  </footer>
+
+  <!-- Scroll to Top Button -->
+  <button id="toTop" onclick="scrollToTop()">↑</button>
+
+  <!-- Script -->
+  <script>
+    // Scroll to top button
+    const toTop = document.getElementById("toTop");
+    window.onscroll = function() {
+      if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+        toTop.style.display = "block";
+      } else {
+        toTop.style.display = "none";
+      }
+    };
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Hamburger menu
+    function toggleMenu() {
+      document.getElementById("navLinks").classList.toggle("active");
+    }
+
+    // Scroll animations
+    const sections = document.querySelectorAll("section");
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+        }
+      });
+    }, { threshold: 0.2 });
+
+    sections.forEach(section => {
+      observer.observe(section);
+    });
+  </script>
+
+</body>
+</html>
